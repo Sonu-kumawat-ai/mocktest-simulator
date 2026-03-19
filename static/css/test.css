@@ -1,0 +1,12 @@
+#qProgressFill {
+  width: 0%;
+}
+
+.is-hidden {
+  display: none;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+}

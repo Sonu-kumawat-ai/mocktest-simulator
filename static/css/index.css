@@ -1,0 +1,47 @@
+.nav-flow-text {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.upload-card {
+  padding: 1.5rem;
+}
+
+.section-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--slate-600);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 1rem;
+}
+
+.format-guide-card {
+  background: var(--sky-50);
+  border-color: var(--sky-200);
+}
+
+.format-guide-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--sky-700);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+.format-guide-pre {
+  font-family: 'DM Sans', monospace;
+  font-size: 0.8rem;
+  color: var(--slate-600);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
+.upload-actions-spaced {
+  margin-top: 1.5rem;
+}
+
+#loadingOverlay {
+  display: none;
+}

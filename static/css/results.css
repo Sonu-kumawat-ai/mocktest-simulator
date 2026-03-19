@@ -1,0 +1,82 @@
+.is-hidden {
+  display: none;
+}
+
+.time-chart-card {
+  margin-top: 1rem;
+}
+
+.time-chart-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--slate-600);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.9rem;
+}
+
+.time-chart-legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.85rem;
+}
+
+.time-legend-dot {
+  font-weight: 700;
+}
+
+.time-legend-dot.is-correct {
+  color: #22c55e;
+}
+
+.time-legend-dot.is-incorrect {
+  color: #ef4444;
+}
+
+.time-legend-dot.is-skipped {
+  color: #f59e0b;
+}
+
+.review-filter-bar {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.section-filter-row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.section-filter-label {
+  font-size: 0.8rem;
+  color: var(--slate-600);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.section-filter-select {
+  max-width: 280px;
+  padding: 8px 12px;
+}
+
+.review-question-full {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--slate-700);
+  margin-bottom: 0.75rem;
+}
+
+.review-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-secondary);
+}

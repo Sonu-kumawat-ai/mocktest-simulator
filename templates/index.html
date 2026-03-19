@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MockTest — Simulate Real Exams</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/index.css">
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">📝</div>
+      MockTest
+    </a>
+    <div class="nav-actions">
+      <span class="nav-flow-text">Upload -> Test -> Analyse</span>
+    </div>
+  </div>
+</nav>
+
+<div class="upload-hero">
+  <h1 class="hero-title">Test yourself.<br><span>Know where you stand.</span></h1>
+  <p class="hero-sub">Upload your question bank, set your timer, and simulate real exam conditions — instantly.</p>
+
+  <div id="errorBanner" class="error-banner">
+    <span>⚠️</span>
+    <span id="errorMsg">Something went wrong.</span>
+  </div>
+
+  <div class="upload-grid">
+    <!-- Drop Zone -->
+    <div class="card upload-card">
+      <h3 class="section-title">📂 Upload Question File</h3>
+      <div class="drop-zone" id="dropZone">
+        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt">
+        <div class="drop-icon">📄</div>
+        <div class="drop-title">Drop your file here</div>
+        <div class="drop-sub">or click to browse</div>
+        <div class="drop-formats">
+          <span class="format-tag">PDF</span>
+          <span class="format-tag">DOC</span>
+          <span class="format-tag">DOCX</span>
+          <span class="format-tag">TXT</span>
+        </div>
+      </div>
+      <div class="file-preview" id="filePreview">
+        <span class="file-icon" id="fileIcon">📄</span>
+        <div class="file-info">
+          <div class="file-name" id="fileName">—</div>
+          <div class="file-size" id="fileSize">—</div>
+        </div>
+        <button class="file-remove" id="fileRemove">✕</button>
+      </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="card settings-card upload-card">
+      <h3 class="section-title">⚙️ Test Settings</h3>
+      <div class="settings-grid">
+        <div class="form-group">
+          <label class="form-label">Total Timer (min)</label>
+          <input class="form-input" type="number" id="totalTime" value="60" min="1" max="360">
+          <span class="form-hint">Overall test duration</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Section Timer (min)</label>
+          <input class="form-input" type="number" id="sectionalTime" value="0" min="0" max="120">
+          <span class="form-hint">0 = disabled</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Marks Per Question</label>
+          <input class="form-input" type="number" id="marksPerQuestion" value="1" min="0.25" step="0.25" max="100">
+          <span class="form-hint">Used for score calculation</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Negative Marking (optional)</label>
+          <label class="toggle-row">
+            <input type="checkbox" id="negativeMarkingEnabled">
+            <span>Enable negative marking</span>
+          </label>
+          <input class="form-input" type="number" id="negativeMarks" value="0.25" min="0" step="0.25" max="100">
+          <span class="form-hint">Deduction for each wrong answer (applies only when enabled)</span>
+        </div>
+        <div class="form-group settings-span-2">
+          <label class="form-label">Question Order</label>
+          <label class="toggle-row">
+            <input type="checkbox" id="shuffleQuestions">
+            <span>Shuffle questions</span>
+          </label>
+          <span class="form-hint">Questions will be randomized before test starts</span>
+        </div>
+        <div class="form-group settings-span-2">
+          <label class="form-label">Recommended File Format</label>
+          <button type="button" class="btn btn-secondary btn-sm format-guide-toggle-btn" id="formatGuideBtn">Show Recommended Format</button>
+          <span class="form-hint">Display sample question format below</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Format Guide -->
+    <div class="card format-guide-card is-hidden upload-card" id="formatGuideCard">
+      <h3 class="format-guide-title">📋 Recommended File Format</h3>
+      <pre class="format-guide-pre">1. What is the capital of France?
+A) London
+B) Berlin
+C) Paris
+D) Madrid
+Answer: C
+Explanation: Paris is the capital city...
+
+2. Next question here...
+A) Option 1
+B) Option 2
+C) Option 3
+D) Option 4
+Answer: A
+Explanation: Because...</pre>
+    </div>
+  </div>
+
+  <div class="upload-actions upload-actions-spaced">
+    <button class="btn btn-ghost" id="resetBtn">Reset</button>
+    <button class="btn btn-primary btn-lg" id="startBtn">
+      <span>Start Test</span>
+      <span>-></span>
+    </button>
+  </div>
+</div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">Processing your file...</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/static/js/index.js" defer></script>
+</body>
+</html>

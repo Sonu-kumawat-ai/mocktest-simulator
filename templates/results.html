@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MockTest — Results & Analysis</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/results.css">
+  <script src="/static/js/results.js" defer></script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">📝</div>
+      MockTest
+    </a>
+    <div class="nav-actions">
+      <button class="btn btn-secondary btn-sm" id="startNewBtn">📂 New Test</button>
+    </div>
+  </div>
+</nav>
+
+<div class="results-layout">
+
+  <!-- Hero Summary -->
+  <div class="results-hero" id="resultHero">
+    <div class="results-hero-title" id="heroTitle">Results</div>
+    <div class="results-hero-sub" id="heroSub">Loading...</div>
+    <div class="score-ring-container">
+      <div class="score-ring">
+        <svg viewBox="0 0 120 120" width="120" height="120">
+          <circle class="ring-bg" cx="60" cy="60" r="52"/>
+          <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="52" stroke-dasharray="326.7" stroke-dashoffset="326.7"/>
+        </svg>
+        <div class="ring-text">
+          <span class="score-pct" id="scorePct">—</span>
+          <span class="score-lbl">Accuracy</span>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="heroCorrect">—</div>
+          <div class="hero-stat-lbl">Correct</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="heroIncorrect">—</div>
+          <div class="hero-stat-lbl">Incorrect</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="heroSkipped">—</div>
+          <div class="hero-stat-lbl">Skipped</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num" id="heroTotal">—</div>
+          <div class="hero-stat-lbl">Total</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="results-tabs">
+    <button class="tab-btn active" id="tabAnalysis">📊 Analysis</button>
+    <button class="tab-btn" id="tabReview">📖 Review Answers</button>
+  </div>
+
+  <!-- Analysis Tab -->
+  <div id="panelAnalysis">
+    <div class="analysis-section">
+      <div class="analysis-section-title">Performance</div>
+      <div class="insights-grid" id="summaryInsightsGrid">
+        <div class="insight-card"><div class="insight-title">Accuracy %</div><div class="insight-value" id="mAccuracy">—</div><div class="insight-sub">Overall score across all questions</div></div>
+        <div class="insight-card"><div class="insight-title">Score</div><div class="insight-value" id="mScore">—</div><div class="insight-sub">Final score (scored / max)</div></div>
+        <div class="insight-card"><div class="insight-title">Attempted %</div><div class="insight-value" id="mAttemptedPercent">—</div><div class="insight-sub">Attempt rate across all questions</div></div>
+        <div class="insight-card"><div class="insight-title">Total Time</div><div class="insight-value" id="mTotalTime">—</div><div class="insight-sub">Total time spent in test</div></div>
+        <div class="insight-card"><div class="insight-title">Accuracy (Attempted Questions)</div><div class="insight-value" id="iAttemptedAccuracy">—</div><div class="insight-sub">Correct out of attempted</div></div>
+        <div class="insight-card"><div class="insight-title">Attempted</div><div class="insight-value" id="iAttempted">—</div><div class="insight-sub" id="iAttemptRate">—</div></div>
+      </div>
+    </div>
+
+    <div class="analysis-section">
+      <div class="analysis-section-title">Question Breakdown</div>
+      <div class="insights-grid" id="breakdownInsightsGrid">
+        <div class="insight-card"><div class="insight-title">Correct</div><div class="insight-value" id="mCorrect">—</div><div class="insight-sub">Correct answers</div></div>
+        <div class="insight-card"><div class="insight-title">Incorrect</div><div class="insight-value" id="mIncorrect">—</div><div class="insight-sub">Incorrect answers</div></div>
+        <div class="insight-card"><div class="insight-title">Skipped</div><div class="insight-value" id="mSkipped">—</div><div class="insight-sub">Skipped questions</div></div>
+      </div>
+    </div>
+
+    <div class="analysis-section">
+      <div class="analysis-section-title">Section Analysis</div>
+      <div class="section-analysis-grid" id="sectionAnalysisGrid"></div>
+    </div>
+
+    <div class="analysis-section">
+      <div class="analysis-section-title">Time Analysis</div>
+      <div class="insights-grid" id="timeInsightsGrid">
+        <div class="insight-card"><div class="insight-title">Avg Time per Question</div><div class="insight-value" id="mAvgTime">—</div><div class="insight-sub">Average time per question</div></div>
+        <div class="insight-card"><div class="insight-title">Fastest Correct</div><div class="insight-value" id="iFastestCorrect">—</div><div class="insight-sub">Quickest correct question</div></div>
+        <div class="insight-card"><div class="insight-title">Slowest Question</div><div class="insight-value" id="iSlowestQuestion">—</div><div class="insight-sub">Highest time spent</div></div>
+      </div>
+      <div class="card time-chart-card">
+        <h3 class="time-chart-title">⏱ Time Taken Per Question</h3>
+        <div class="time-chart-legend">
+          <span><span class="time-legend-dot is-correct">■</span> Correct</span>
+          <span><span class="time-legend-dot is-incorrect">■</span> Incorrect</span>
+          <span><span class="time-legend-dot is-skipped">■</span> Skipped</span>
+        </div>
+        <div class="time-chart" id="timeChart"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Review Tab -->
+  <div id="panelReview" class="is-hidden">
+    <!-- Filter Bar -->
+    <div class="review-filter-bar" id="reviewFilterBar">
+      <button class="btn btn-sm btn-secondary active-filter" data-filter="all">All</button>
+      <button class="btn btn-sm btn-ghost" data-filter="correct">✅ Correct</button>
+      <button class="btn btn-sm btn-ghost" data-filter="incorrect">❌ Incorrect</button>
+      <button class="btn btn-sm btn-ghost" data-filter="skipped">⏭ Skipped</button>
+    </div>
+    <div class="section-filter-row">
+      <label for="sectionFilter" class="section-filter-label">Section</label>
+      <select id="sectionFilter" class="form-input section-filter-select">
+        <option value="all">All Sections</option>
+      </select>
+    </div>
+    <div class="review-list" id="reviewList"></div>
+  </div>
+
+</div>
+
+<!-- New Test Modal -->
+<div class="modal-overlay" id="newTestModal">
+  <div class="modal">
+    <div class="modal-icon">📂</div>
+    <div class="modal-title">Start a New Test?</div>
+    <div class="modal-body">This will clear your current results. Make sure to save anything you need.</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="cancelNewTestBtn">Cancel</button>
+      <button class="btn btn-primary" id="confirmNewTestBtn">New Test</button>
+    </div>
+  </div>
+</div>
+
+<div class="loading-overlay is-hidden" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Loading results...</div>
+</div>
+</body>
+</html>

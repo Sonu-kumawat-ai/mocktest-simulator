@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MockTest — In Progress</title>
+  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/test.css">
+  <script src="/static/js/test.js" defer></script>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-brand">
+      <div class="brand-icon">📝</div>
+      MockTest
+    </a>
+    <div class="nav-actions">
+      <div class="timer-display" id="timerDisplay">
+        <span class="timer-icon">⏱</span>
+        <div>
+          <div class="timer-time" id="timerTime">—</div>
+          <div class="timer-label">Remaining</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="test-layout" id="testLayout">
+  <!-- Main Question Area -->
+  <div>
+    <div class="test-header">
+      <div class="test-meta">
+        <div class="test-title" id="testTitle">Loading test...</div>
+        <div class="test-sub" id="testSub"></div>
+      </div>
+    </div>
+
+    <div class="question-card" id="questionCard">
+      <div class="q-header">
+        <div class="q-number-badge" id="qNumBadge">1</div>
+        <div class="q-progress-info">
+          <div class="q-count" id="qCount">Question 1 of —</div>
+            <div class="q-progress-bar"><div class="q-progress-fill" id="qProgressFill"></div></div>
+        </div>
+        <div class="q-status-badge unanswered" id="qStatusBadge">Not Answered</div>
+      </div>
+
+      <div class="q-body">
+        <div class="q-text" id="qText">Loading question...</div>
+        <div class="options-grid" id="optionsGrid"></div>
+      </div>
+
+      <div class="q-footer">
+        <div class="q-nav">
+          <button class="btn btn-ghost" id="prevBtn">← Previous</button>
+          <button class="btn btn-secondary" id="skipBtn">Skip</button>
+        </div>
+        <div class="q-nav">
+          <button class="btn btn-success is-hidden" id="nextSectionBtn">Next Section →</button>
+          <button class="btn btn-primary" id="nextBtn">Next →</button>
+          <button class="btn btn-danger is-hidden" id="endBtn">End Test ✓</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="test-sidebar">
+    <div class="palette-card">
+      <div class="palette-title">Question Navigator</div>
+      <div class="palette-grid" id="paletteGrid"></div>
+      <div class="palette-legend">
+        <div class="legend-item"><div class="legend-dot lg-answered"></div><span>Answered</span></div>
+        <div class="legend-item"><div class="legend-dot lg-skipped"></div><span>Skipped</span></div>
+        <div class="legend-item"><div class="legend-dot lg-unanswered"></div><span>Not visited</span></div>
+      </div>
+    </div>
+
+    <div class="palette-card">
+      <div class="palette-title">Live Stats</div>
+      <div class="stats-mini">
+        <div class="stat-pill">
+          <div class="stat-pill-num" id="statAnswered">0</div>
+          <div class="stat-pill-lbl" id="statAnsweredLbl">Answered</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-num" id="statSkipped">0</div>
+          <div class="stat-pill-lbl" id="statSkippedLbl">Skipped</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-num" id="statUnanswered">0</div>
+          <div class="stat-pill-lbl" id="statRemainingLbl">Remaining</div>
+        </div>
+        <div class="stat-pill">
+          <div class="stat-pill-num" id="statTotal">0</div>
+          <div class="stat-pill-lbl" id="statTotalLbl">Total</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-danger btn-full" id="sidebarEndBtn">
+      🏁 End Test
+    </button>
+  </div>
+</div>
+
+<!-- Confirm End Modal -->
+<div class="modal-overlay" id="endModal">
+  <div class="modal">
+    <div class="modal-icon">🏁</div>
+    <div class="modal-title">End the test?</div>
+    <div class="modal-body" id="endModalBody">You still have unanswered questions. Are you sure you want to submit?</div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" id="modalContinueBtn">Continue Test</button>
+      <button class="btn btn-danger" id="modalSubmitBtn">Submit Now</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="loading-overlay is-hidden" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">Submitting test...</div>
+</div>
+</body>
+</html>
