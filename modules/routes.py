@@ -49,6 +49,7 @@ def register_routes(app):
         if not allowed_file(file.filename):
             return jsonify({'error': 'File type not allowed. Use PDF, DOC, DOCX, or TXT'}), 400
 
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
         filename = secure_filename(file.filename)
         unique_name = f"{uuid.uuid4()}_{filename}"
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_name)
@@ -61,7 +62,8 @@ def register_routes(app):
             questions = generate_sample_questions_from_text(text)
 
         if not questions:
-            os.remove(filepath)
+            if os.path.exists(filepath):
+                os.remove(filepath)
             return jsonify({'error': 'Could not extract questions from file. Please ensure your file contains MCQ-format questions (numbered with A/B/C/D options).'}), 400
 
         pre_sections = build_sections_from_questions(questions)
@@ -119,7 +121,8 @@ def register_routes(app):
         session['test_data'] = test_data
         session['test_id'] = test_id
 
-        os.remove(filepath)
+        if os.path.exists(filepath):
+            os.remove(filepath)
 
         return jsonify({
             'success': True,
