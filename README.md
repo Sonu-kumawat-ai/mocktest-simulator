@@ -101,3 +101,9 @@ Answer: 2
 
 - `app.py` is the only startup file.
 - Routes and business logic are split into the `modules/` package for maintainability.
+
+## Vercel Notes
+
+- Set environment variable `FLASK_SECRET_KEY` in your Vercel project settings.
+- Uploads are written to temporary server storage in serverless runtime.
+- Test state is stored server-side in temp JSON files keyed by `test_id` to avoid oversized cookie sessions.

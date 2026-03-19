@@ -10,10 +10,17 @@ from modules.parsers import (
     generate_sample_questions_from_text,
     parse_questions_with_ai_fallback,
 )
+from modules.storage import delete_test_data, load_test_data, save_test_data
 from modules.utils import allowed_file, build_sections_from_questions, parse_bool
 
 
 def register_routes(app):
+    def current_test_data():
+        test_id = session.get('test_id')
+        if not test_id:
+            return None
+        return load_test_data(test_id)
+
     @app.route('/')
     def index():
         return render_template('index.html')
@@ -118,8 +125,9 @@ def register_routes(app):
             'filename': filename
         }
 
-        session['test_data'] = test_data
+        save_test_data(test_id, test_data)
         session['test_id'] = test_id
+        session.modified = True
 
         if os.path.exists(filepath):
             os.remove(filepath)
@@ -143,15 +151,16 @@ def register_routes(app):
 
     @app.route('/test')
     def test_page():
-        if 'test_data' not in session:
+        if not current_test_data():
             return render_template('index.html')
         return render_template('test.html')
 
     @app.route('/api/test-data')
     def get_test_data():
-        if 'test_data' not in session:
+        data = current_test_data()
+        if not data:
             return jsonify({'error': 'No active test'}), 404
-        data = session['test_data'].copy()
+        data = data.copy()
 
         questions_safe = []
         for q in data['questions']:
@@ -179,7 +188,8 @@ def register_routes(app):
 
     @app.route('/api/save-answer', methods=['POST'])
     def save_answer():
-        if 'test_data' not in session:
+        test_data = current_test_data()
+        if not test_data:
             return jsonify({'error': 'No active test'}), 404
 
         data = request.json
@@ -187,44 +197,41 @@ def register_routes(app):
         answer = data.get('answer')
         time_spent = data.get('time_spent', 0)
 
-        test_data = session['test_data']
         test_data['answers'][q_id] = answer
         test_data['time_per_question'][q_id] = time_spent
-        session['test_data'] = test_data
-        session.modified = True
+        save_test_data(test_data['id'], test_data)
 
         return jsonify({'success': True})
 
     @app.route('/api/submit-test', methods=['POST'])
     def submit_test():
-        if 'test_data' not in session:
+        test_data = current_test_data()
+        if not test_data:
             return jsonify({'error': 'No active test'}), 404
 
         data = request.json
         answers = data.get('answers', {})
         time_per_question = data.get('time_per_question', {})
 
-        test_data = session['test_data']
         test_data['answers'] = answers
         test_data['time_per_question'] = time_per_question
         test_data['submitted'] = True
-        session['test_data'] = test_data
-        session.modified = True
+        save_test_data(test_data['id'], test_data)
 
         return jsonify({'success': True, 'redirect': '/results'})
 
     @app.route('/results')
     def results_page():
-        if 'test_data' not in session:
+        if not current_test_data():
             return render_template('index.html')
         return render_template('results.html')
 
     @app.route('/api/results')
     def get_results():
-        if 'test_data' not in session:
+        test_data = current_test_data()
+        if not test_data:
             return jsonify({'error': 'No results found'}), 404
 
-        test_data = session['test_data']
         questions = test_data['questions']
         answers = test_data.get('answers', {})
         time_per_q = test_data.get('time_per_question', {})
@@ -338,5 +345,8 @@ def register_routes(app):
 
     @app.route('/api/reset', methods=['POST'])
     def reset_test():
+        test_id = session.get('test_id')
+        if test_id:
+            delete_test_data(test_id)
         session.clear()
         return jsonify({'success': True})
