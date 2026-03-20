@@ -1,6 +1,7 @@
 import os
 import random
 import uuid
+import logging
 
 from flask import jsonify, render_template, request, session
 from werkzeug.utils import secure_filename
@@ -9,9 +10,13 @@ from modules.parsers import (
     extract_text_from_file,
     generate_sample_questions_from_text,
     parse_questions_with_ai_fallback,
+    parse_questions_with_gemini,
 )
 from modules.storage import delete_test_data, load_test_data, save_test_data
 from modules.utils import allowed_file, build_sections_from_questions, parse_bool
+from modules.config import USE_GEMINI
+
+logger = logging.getLogger(__name__)
 
 
 def register_routes(app):
@@ -63,9 +68,19 @@ def register_routes(app):
         file.save(filepath)
 
         text = extract_text_from_file(filepath, filename)
-        questions = parse_questions_with_ai_fallback(text)
+        
+        # Try Gemini API first if enabled, then fall back to regex parsing
+        questions = None
+        if USE_GEMINI:
+            logger.info("Attempting to parse with Gemini API...")
+            questions = parse_questions_with_gemini(text)
+        
+        if not questions:
+            logger.info("Using regex-based parsing fallback...")
+            questions = parse_questions_with_ai_fallback(text)
 
         if not questions:
+            logger.info("Generating sample questions from text...")
             questions = generate_sample_questions_from_text(text)
 
         if not questions:

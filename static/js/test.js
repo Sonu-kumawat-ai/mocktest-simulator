@@ -237,15 +237,38 @@ function renderQuestion() {
     badge.textContent = 'Not Answered';
   }
 
-  document.getElementById('qText').textContent = q.text;
+  // Render question text with proper formatting and HTML escaping
+  const qTextEl = document.getElementById('qText');
+  qTextEl.textContent = q.text;
+  qTextEl.className = 'q-text';
+  if (q.has_special_chars) {
+    qTextEl.classList.add('series-content');
+  }
 
+  // Render options with proper escaping and formatting
   const grid = document.getElementById('optionsGrid');
   grid.innerHTML = '';
   grid.classList.toggle('compact', q.options.length >= 5);
   q.options.forEach((opt, idx) => {
     const div = document.createElement('div');
-    div.className = 'option-item' + (answers[qId] === idx ? ' selected' : '');
-    div.innerHTML = `<div class="option-letter">${optionLabel(idx)}</div><div class="option-text">${opt}</div>`;
+    const optClasses = ['option-item'];
+    if (answers[qId] === idx) optClasses.push('selected');
+    if (q.has_special_chars) optClasses.push('symbol-heavy');
+    
+    div.className = optClasses.join(' ');
+    
+    // Create option letter (safe - just a character)
+    const letterDiv = document.createElement('div');
+    letterDiv.className = 'option-letter';
+    letterDiv.textContent = optionLabel(idx);
+    
+    // Create option text (escaped to prevent HTML injection)
+    const textDiv = document.createElement('div');
+    textDiv.className = 'option-text';
+    textDiv.textContent = opt;
+    
+    div.appendChild(letterDiv);
+    div.appendChild(textDiv);
     div.addEventListener('click', () => selectAnswer(idx));
     grid.appendChild(div);
   });

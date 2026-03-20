@@ -460,19 +460,34 @@ body {
 .q-status-badge.skipped { background: #fef3c7; color: #92400e; }
 .q-status-badge.unanswered { background: var(--sky-100); color: var(--sky-600); }
 
-.q-body { padding: 0.9rem 1rem; flex: 1; }
+.q-body { padding: 0.9rem 1rem; flex: 1; overflow-y: auto; }
 .q-text {
   font-size: 1rem;
-  line-height: 1.45;
+  line-height: 1.6;
   color: var(--slate-800);
-  margin-bottom: 0.6rem;
+  margin-bottom: 0.9rem;
   font-weight: 500;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Series/Pattern question styling with proper spacing */
+.q-text.series-content, .q-text.pattern-content {
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.4em;
+  word-spacing: 0.8em;
+  background: var(--slate-50);
+  padding: 0.75rem;
+  border-radius: var(--radius);
+  border-left: 4px solid var(--sky-400);
 }
 
 .options-grid { display: grid; gap: 0.45rem; }
 .option-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 14px;
   padding: 0.55rem 0.78rem;
   border: 2px solid var(--border);
@@ -482,7 +497,7 @@ body {
   background: white;
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 .option-item:hover {
   border-color: var(--sky-300);
@@ -507,6 +522,7 @@ body {
   flex-shrink: 0;
   color: var(--text-secondary);
   transition: all 0.2s;
+  min-width: 30px;
 }
 .option-item.selected .option-letter {
   background: var(--sky-500);
@@ -518,9 +534,18 @@ body {
   color: var(--slate-700);
   flex: 1;
   min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
   word-break: break-word;
+  line-height: 1.5;
+}
+
+/* Monospace styling for options with special symbols */
+.option-item.symbol-heavy .option-text,
+.option-item.series-option .option-text {
+  font-family: 'Courier New', monospace;
+  font-size: 0.87rem;
+  letter-spacing: 0.15em;
 }
 
 /* Compact mode keeps 5+ options visible without page scroll on typical laptop heights. */
@@ -530,6 +555,7 @@ body {
   width: 26px;
   height: 26px;
   font-size: 0.72rem;
+  min-width: 26px;
 }
 .options-grid.compact .option-text { font-size: 0.84rem; }
 
@@ -982,7 +1008,7 @@ body {
 .review-options-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1rem; }
 .review-opt {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   padding: 8px 12px;
   border-radius: var(--radius-sm);
@@ -991,10 +1017,20 @@ body {
 .review-opt.user-answer { background: #fee2e2; }
 .review-opt.correct-answer { background: #dcfce7; }
 .review-opt.neutral { background: var(--slate-50); }
-.review-opt .r-letter { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; flex-shrink: 0; }
+.review-opt .r-letter { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.75rem; flex-shrink: 0; min-width: 26px; }
 .review-opt.user-answer .r-letter { background: var(--red-400); color: white; }
 .review-opt.correct-answer .r-letter { background: var(--green-500); color: white; }
 .review-opt.neutral .r-letter { background: var(--slate-200); color: var(--slate-600); }
+
+/* Symbol-heavy options with monospace font */
+.review-opt.symbol-heavy span {
+  font-family: 'Courier New', monospace;
+  font-size: 0.87rem;
+  letter-spacing: 0.15em;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
 
 .explanation-box {
   background: var(--sky-50);

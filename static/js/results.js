@@ -240,16 +240,47 @@ function renderReview(filter = 'all', sectionFilter = currentSectionFilter) {
     item.className = 'review-item';
     item.dataset.status = q.status;
 
-    const headerHTML = `
-      <div class="review-item-header">
-        <div class="review-status-icon ${q.status}">${statusIcons[q.status]}</div>
-        <div class="review-q-text">Q${q.id}. ${q.text.substring(0, 80)}${q.text.length > 80 ? '...' : ''}</div>
-        <div class="review-time-badge">⏱ ${q.time_spent}s</div>
-        <div class="review-chevron">▼</div>
-      </div>
-    `;
+    // Build header
+    const header = document.createElement('div');
+    header.className = 'review-item-header';
+    
+    const statusIcon = document.createElement('div');
+    statusIcon.className = `review-status-icon ${q.status}`;
+    statusIcon.textContent = statusIcons[q.status];
+    
+    const qText = document.createElement('div');
+    qText.className = 'review-q-text';
+    const preview = q.text.substring(0, 80) + (q.text.length > 80 ? '...' : '');
+    qText.textContent = `Q${q.id}. ${preview}`;
+    
+    const timeBadge = document.createElement('div');
+    timeBadge.className = 'review-time-badge';
+    timeBadge.textContent = `⏱ ${q.time_spent}s`;
+    
+    const chevron = document.createElement('div');
+    chevron.className = 'review-chevron';
+    chevron.textContent = '▼';
+    
+    header.appendChild(statusIcon);
+    header.appendChild(qText);
+    header.appendChild(timeBadge);
+    header.appendChild(chevron);
 
-    let optionsHTML = '<div class="review-options-list">';
+    // Build body
+    const body = document.createElement('div');
+    body.className = 'review-item-body';
+    
+    const fullQ = document.createElement('div');
+    fullQ.className = 'review-question-full';
+    if (q.has_special_chars) {
+      fullQ.classList.add('series-content');
+    }
+    fullQ.textContent = `Q${q.id}. ${q.text}`;
+    body.appendChild(fullQ);
+    
+    // Build options
+    const optionsList = document.createElement('div');
+    optionsList.className = 'review-options-list';
     q.options.forEach((opt, idx) => {
       const isUser = q.user_answer === idx;
       const isCorrect = q.correct_answer === idx;
@@ -267,31 +298,51 @@ function renderReview(filter = 'all', sectionFilter = currentSectionFilter) {
         indicator = ' ✓';
       }
 
-      optionsHTML += `
-        <div class="review-opt ${cls}">
-          <div class="r-letter">${optionLabel(idx)}</div>
-          <span>${opt}${indicator}</span>
-        </div>`;
+      const optDiv = document.createElement('div');
+      optDiv.className = 'review-opt ' + cls;
+      if (q.has_special_chars) {
+        optDiv.classList.add('symbol-heavy');
+      }
+      
+      const letterDiv = document.createElement('div');
+      letterDiv.className = 'r-letter';
+      letterDiv.textContent = optionLabel(idx);
+      
+      const textSpan = document.createElement('span');
+      textSpan.textContent = opt + indicator;
+      
+      optDiv.appendChild(letterDiv);
+      optDiv.appendChild(textSpan);
+      optionsList.appendChild(optDiv);
     });
-    optionsHTML += '</div>';
-
-    const bodyHTML = `
-      <div class="review-item-body">
-        <div class="review-question-full">Q${q.id}. ${q.text}</div>
-        ${optionsHTML}
-        <div class="explanation-box">
-          <div class="explanation-title">💡 Explanation</div>
-          <div class="explanation-text">${q.explanation || 'No explanation available.'}</div>
-        </div>
-      </div>
-    `;
-
-    item.innerHTML = headerHTML + bodyHTML;
+    body.appendChild(optionsList);
+    
+    // Build explanation
+    const explBox = document.createElement('div');
+    explBox.className = 'explanation-box';
+    
+    const explTitle = document.createElement('div');
+    explTitle.className = 'explanation-title';
+    explTitle.textContent = '💡 Explanation';
+    
+    const explText = document.createElement('div');
+    explText.className = 'explanation-text';
+    explText.textContent = q.explanation || 'No explanation available.';
+    
+    explBox.appendChild(explTitle);
+    explBox.appendChild(explText);
+    body.appendChild(explBox);
+    
+    item.appendChild(header);
+    item.appendChild(body);
     list.appendChild(item);
   });
 
   if (questions.length === 0) {
-    list.innerHTML = '<div class="review-empty">No questions in this category.</div>';
+    const empty = document.createElement('div');
+    empty.className = 'review-empty';
+    empty.textContent = 'No questions in this category.';
+    list.appendChild(empty);
   }
 }
 

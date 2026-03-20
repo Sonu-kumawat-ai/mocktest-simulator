@@ -2,9 +2,25 @@
 
 A Flask + vanilla JS mock test platform for practicing MCQ exams with upload, timed test flow, scoring, section-wise analysis, and detailed review.
 
+## Features
+
+- **Intelligent Question Parsing**: Powered by Google Gemini API for handling messy and complex question formats
+- **Smart Formatting**: Automatic detection and proper formatting of series questions, special characters, and various question types
+- **Upload question files** and auto-parse MCQs from PDF, DOCX, DOC, and TXT
+- **Total timer** and optional section timer
+- **Optional negative marking** and configurable marks per question
+- **Optional shuffle** (section-aware)
+- **Section-locked progression** during test
+- **Auto-save answers** and time-per-question tracking
+- **Auto-submit on timeout**
+- **Results dashboard** with score, time insights, and section-wise analytics
+- **Review answers** with filters (status + section)
+
 ## Quick Start
 
-### Windows (PowerShell)
+### 1. Install Dependencies
+
+#### Windows (PowerShell)
 
 ```powershell
 python -m venv venv
@@ -13,7 +29,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-### Linux / macOS
+#### Linux / macOS
 
 ```bash
 python3 -m venv venv
@@ -23,6 +39,38 @@ python app.py
 ```
 
 Open: http://127.0.0.1:5000
+
+### 2. (Optional) Enable Gemini API for Better Question Parsing
+
+The system works without Gemini API using regex-based parsing, but Gemini provides **far superior handling** of messy and complex question files.
+
+#### Get a Free Gemini API Key
+
+1. Visit: https://aistudio.google.com/app/apikey
+2. Click **"Create API Key"** (free tier available)
+3. Copy your API key
+
+#### Setup
+
+1. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Add your Gemini API key to `.env`:
+   ```
+   GEMINI_API_KEY=your_api_key_here
+   ```
+
+3. Restart the Flask app
+
+The system will now use Gemini for intelligent question parsing with automatic support for:
+- **All question types** - Mathematics, Reasoning, English, Science, Aptitude, Logic, Series/Patterns, Matching, Fill-in-the-blank, etc.
+- **Special characters and symbols** - Preserves mathematical notation (√, ×, ÷, ≤, ≥) and special symbols (@, #, $, etc.)
+- **Complex multi-line questions** - Handles questions with long text, formulas, or nested structures
+- **Section/chapter headers** - Automatically detects and organizes questions by section
+- **Multiple answer key formats** - Recognizes "Answer:", "Ans:", "Correct:" and other variations
+- **Flexible option formats** - Handles A/B/C/D, 1/2/3/4, or other numbering systems
 
 ## Project Structure
 
@@ -51,6 +99,7 @@ MockTest/
 |       `-- results.js
 |-- uploads/                    # Temporary upload files (runtime)
 |-- requirements.txt
+|-- .env.example                # Environment variable template
 `-- README.md
 ```
 
@@ -59,6 +108,8 @@ MockTest/
 - TXT
 - PDF
 - DOC/DOCX
+
+Files can be messy, poorly formatted, or contain complex question structures. Gemini API will intelligently parse them.
 
 ## Question Format Examples
 
@@ -85,17 +136,52 @@ Explanation: Paris is the capital of France.
 Answer: 2
 ```
 
-## Features
+### Series/Pattern Questions
 
-- Upload question files and auto-parse MCQs
-- Total timer and optional section timer
-- Optional negative marking and configurable marks per question
-- Optional shuffle (section-aware)
-- Section-locked progression during test
-- Auto-save answers and time-per-question tracking
-- Auto-submit on timeout
-- Results dashboard with score, time insights, and section-wise analytics
-- Review answers with filters (status + section)
+```
+Question: Which element is fourth to the right of the ninth element from the right end?
+Series: P 1 R X 4 J E # 7 M T 2 I 9 * B 5 H @ 3 A $ G
+A) @
+B) 3
+C) H
+D) 5
+E) A
+Answer: A
+```
+
+### Mathematics Questions
+
+```
+Q1. If 3x + 5 = 20, what is the value of x?
+A) 3
+B) 5
+C) 7
+D) 9
+Answer: B
+Explanation: 3x = 20 - 5 = 15, so x = 5
+```
+
+### Reasoning Questions
+
+```
+Q2. If all cats are animals and all animals have fur, which statement must be true?
+A) All cats have fur
+B) All animals are cats
+C) Some fur is not from animals
+D) No animals have fur
+Answer: A
+```
+
+### English/Comprehension Questions
+
+```
+Q3. In the passage above, what is the main idea?
+A) History of literature
+B) Evolution of writing
+C) Modern technology
+D) Ancient civilizations
+Answer: B
+```
 
 ## Notes
 

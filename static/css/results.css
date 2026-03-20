@@ -73,6 +73,22 @@
   font-weight: 600;
   color: var(--slate-700);
   margin-bottom: 0.75rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Series/Pattern question styling in review */
+.review-question-full.series-content {
+  font-family: 'Courier New', monospace;
+  font-size: 0.82rem;
+  letter-spacing: 0.4em;
+  word-spacing: 0.8em;
+  background: var(--slate-50);
+  padding: 0.75rem;
+  border-radius: 6px;
+  border-left: 4px solid var(--sky-400);
+  overflow-x: auto;
 }
 
 .review-empty {
