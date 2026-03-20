@@ -5,8 +5,10 @@ A Flask + vanilla JS mock test platform for practicing MCQ exams with upload, ti
 ## Features
 
 - **Intelligent Question Parsing**: Powered by Google Gemini API for handling messy and complex question formats
+- **Answer Verification and Correction**: Gemini verifies provided keys, corrects wrong answers, and infers missing answers
 - **Smart Formatting**: Automatic detection and proper formatting of series questions, special characters, and various question types
 - **Upload question files** and auto-parse MCQs from PDF, DOCX, DOC, and TXT
+- **Chunked Parsing for Large Files**: Splits long extracted text to improve reliability and avoid model truncation
 - **Total timer** and optional section timer
 - **Optional negative marking** and configurable marks per question
 - **Optional shuffle** (section-aware)
@@ -53,6 +55,13 @@ The system works without Gemini API using regex-based parsing, but Gemini provid
 #### Setup
 
 1. Copy `.env.example` to `.env`:
+
+   Windows (PowerShell):
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+
+   Linux/macOS:
    ```bash
    cp .env.example .env
    ```
@@ -71,6 +80,17 @@ The system will now use Gemini for intelligent question parsing with automatic s
 - **Section/chapter headers** - Automatically detects and organizes questions by section
 - **Multiple answer key formats** - Recognizes "Answer:", "Ans:", "Correct:" and other variations
 - **Flexible option formats** - Handles A/B/C/D, 1/2/3/4, or other numbering systems
+- **Answer quality checks** - Verifies provided answers, fixes incorrect keys, and infers missing answers
+
+Current model: **Gemini 2.5 Flash Lite** (`gemini-2.5-flash-lite`)
+
+### Parsing Pipeline
+
+1. Extract text from uploaded file
+2. Parse with Gemini (chunked for long text)
+3. Normalize options/answers (0-based indexing)
+4. If Gemini is unavailable, fall back to regex parser
+5. If parsing fails, generate sample questions as last resort
 
 ## Project Structure
 
@@ -110,6 +130,11 @@ MockTest/
 - DOC/DOCX
 
 Files can be messy, poorly formatted, or contain complex question structures. Gemini API will intelligently parse them.
+
+Notes on answer handling:
+- If answer key is present, Gemini verifies it.
+- If answer key is wrong, Gemini corrects it.
+- If answer key is missing, Gemini infers a best answer.
 
 ## Question Format Examples
 
